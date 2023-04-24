@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from typing import List, Dict
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
 app.add_middleware(
@@ -39,17 +40,24 @@ sheet = [
     }
 ]
 
+#Pydantic class to check parmaters input type and validate.
+class LoanApplication(BaseModel):
+    business_name: str
+    year_established: str
+    loan_amount: float
+    accounting_provider: str
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Business Loan Application System"}
 
 @app.post("/application")
-def create_application(application: Dict[str, str]):
+def create_application(application: LoanApplication):
     # initiate application
-    business_name = application["business_name"]
-    year_established = application["year_established"]
-    loan_amount = float(application["loan_amount"])
-    accounting_provider = application["accounting_provider"]
+    business_name = application.business_name
+    year_established = application.year_established
+    loan_amount = float(application.loan_amount)
+    accounting_provider = application.accounting_provider
 
     # fetch balance sheet from accounting provider
     balance_sheet = fetch_balance_sheet(accounting_provider)
@@ -67,12 +75,20 @@ def fetch_balance_sheet(accounting_provider: str) -> List[Dict[str, int]]:
     return sheet
 
 def apply_rules(balance_sheet: List[Dict[str, int]], loan_amount: float) -> int:
-    # rule 1: if profit in last 12 months and average asset value > loan amount
+    # rule 1: if profit in last 12 months preassessment set to 60
+    # rule 2 : if average asset value accross 12 months > loan amount set preassessment to 100
     last_twelve_months = balance_sheet[:12]
     has_profit = any(transaction["profitOrLoss"] > 0 for transaction in last_twelve_months)
     average_asset_value = sum(transaction["assetsValue"] for transaction in last_twelve_months) / len(last_twelve_months)
-    if has_profit and average_asset_value > loan_amount:
-        return 100
+    if has_profit:
+        if average_asset_value < loan_amount:
+            return 60
+        else:
+            return 100
+    else:
+        return 20
+
+
     # default rule
     return 20
 
