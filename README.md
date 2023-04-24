@@ -1,14 +1,16 @@
 Business Loan Application System
-This is a sample FastAPI-based web service that simulates a business loan application system. It includes an endpoint that receives an application in JSON format, retrieves a balance sheet for the business from a fake accounting provider, applies some rules to calculate a pre-assessment score, and sends the application and score to a decision engine.
+This is a simple FastAPI / React based system that simulates a business loan application system. It includes an endpoint that receives an application in JSON format, retrieves a balance sheet for the business from a fake accounting provider, applies some rules to calculate a pre-assessment score, and sends the application and score to a decision engine.
+The results are then render on the react frontend for viewing.
+
 
 Requirements
-To run this service, you need docker and docker-compose. Below are the steps to run on local machine:
+To run this application, you need docker and docker-compose. Below are the steps to run on local machine:
 
 1. git clone https://github.com/pradeeptyagi23/LoanApp.git
 2. cd LoadApp
 3. docker-compose up --build
 
-This will install all depedencies for the frontend and backend server]
+This will install all depedencies for the frontend and backend server
 
 To launch the frontend . Go to http://localhost:3000
 The backend server will run on http://localhost:8000 and the swagger documentation will be at /docs on the backend server url
