@@ -86,11 +86,8 @@ def apply_rules(balance_sheet: List[Dict[str, int]], loan_amount: float) -> int:
         else:
             return 100
     else:
+        # default rule
         return 20
-
-
-    # default rule
-    return 20
 
 def send_to_decision_engine(business_name: str, year_established: str, balance_sheet: List[Dict[str, int]], pre_assessment: int) -> Dict[str, str]:
     # simulate sending application to decision engine
